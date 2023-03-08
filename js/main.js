@@ -214,7 +214,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-// Filter the posts based on the selected filters
+  // Filter the posts based on the selected filters - old version
+  //   function filterPosts() {
+  //     const selectedTag = getSelectedValue(tagLinks);
+  //     const selectedOption = getSelectedValue(optionLinks);
+  //
+  //     // Filter the posts based on the selected tag and option
+  //     postsToFilter = Array.from(allPosts).filter(post => {
+  //       const postTag = Array.from(post.classList).find(className => className !== 'post');
+  //       const hasTag = !selectedTag || postTag === selectedTag;
+  //       const hasOption = !selectedOption || post.classList.contains(selectedOption);
+  //       return hasTag && hasOption;
+  //     });
+  //
+  //     // Render the filtered posts
+  //     renderPosts();
+  //
+  //     // Get all the options that are not used by the filtered posts
+  //     const unusedOptions = new Set();
+  //     postsToFilter.forEach(post => {
+  //       Array.from(post.classList).forEach(className => {
+  //         if (className !== 'post' && !selectedOption && !post.classList.contains(selectedOption)) {
+  //           unusedOptions.add(className);
+  //         }
+  //       });
+  //     });
+  //
+  //     // Hide the unused options
+  //     optionLinks.forEach(link => {
+  //       if (unusedOptions.has(link.textContent.trim())) {
+  //         link.classList.add('hidden');
+  //       } else {
+  //         link.classList.remove('hidden');
+  //       }
+  //     });
+  //   }
+
   function filterPosts() {
     const selectedTag = getSelectedValue(tagLinks);
     const selectedOption = getSelectedValue(optionLinks);
@@ -230,14 +265,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render the filtered posts
     renderPosts();
 
-    // Get all the options that are not used by the filtered posts
+    // Get all the options that are not used by the filtered posts or are not compatible with the selected tag
     const unusedOptions = new Set();
-    postsToFilter.forEach(post => {
-      Array.from(post.classList).forEach(className => {
-        if (className !== 'post' && !selectedOption && !post.classList.contains(selectedOption)) {
-          unusedOptions.add(className);
-        }
-      });
+    optionLinks.forEach(link => {
+      const option = link.textContent.trim();
+      const optionClass = option.toLowerCase().replace(' ', '-');
+      const optionIsUnused = !postsToFilter.some(post => post.classList.contains(optionClass));
+      const optionIsIncompatible = selectedTag && !postsToFilter.some(post => post.classList.contains(selectedTag.toLowerCase()));
+      if (optionIsUnused || optionIsIncompatible) {
+        unusedOptions.add(option);
+      }
     });
 
     // Hide the unused options
@@ -249,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
 
 // Get the value of the selected filter link
   function getSelectedValue(links) {
