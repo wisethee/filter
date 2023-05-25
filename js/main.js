@@ -123,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const allPosts = document.querySelectorAll(".post");
   const postsContainer = document.querySelector(".posts");
   const resetButton = document.querySelector(".reset");
+  const loadMoreButton = document.querySelector(".load-more");
 
   // Create an array to hold the filtered posts
   let postsToFilter = Array.from(allPosts);
@@ -217,12 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add the "Load More" button if there are more posts
     if (hasMorePosts) {
-      const loadMoreButton = document.createElement("button");
-      loadMoreButton.classList.add("load-more");
-      loadMoreButton.textContent = "Load More";
-      postsContainer.appendChild(loadMoreButton);
-
-      // Attach an event listener to the "Load More" button
       loadMoreButton.addEventListener("click", loadMorePosts);
     }
   }
